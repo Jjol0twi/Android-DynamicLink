@@ -1,2 +1,38 @@
-# Mac os
+# Mac OS
 .DS_Store
+
+# Local configuration file
+local.properties
+/local.properties
+
+# IntelliJ	jackbrain
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle
+.gradle/
+build/
+/build
+
+# generated files and folders
+/captures
+.externalNativeBuild
+.cxx
+
+# User-specific configurations
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
