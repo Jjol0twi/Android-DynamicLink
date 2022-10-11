@@ -2,10 +2,14 @@ package com.example.android_dynamiclink
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.android_dynamiclink.databinding.ActivityMainBinding
+
+private lateinit var mbinding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mbinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mbinding.root)
     }
 }
