@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Android-DynamicLink</string>
+    <string name="dynamic_links_uri">"https://testdynamiclinkswithandroid.page.link"</string>
 </resources>
