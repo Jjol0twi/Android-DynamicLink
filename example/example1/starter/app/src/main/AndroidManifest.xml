@@ -9,6 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:launchMode="singleTask"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
@@ -29,7 +30,7 @@
 
                 <data
                     android:host="www.raywenderlich.com"
-                    android:pathPrefix="/test"
+                    android:pathPrefix="/test2"
                     android:scheme="https" />
             </intent-filter>
 
