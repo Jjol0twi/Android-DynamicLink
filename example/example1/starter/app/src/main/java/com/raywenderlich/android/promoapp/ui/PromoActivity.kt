@@ -34,19 +34,85 @@
 
 package com.raywenderlich.android.promoapp.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.dynamiclinks.DynamicLink
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.raywenderlich.android.promoapp.R
 import com.raywenderlich.android.promoapp.databinding.ActivityPromoBinding
 
 class PromoActivity : AppCompatActivity() {
-  private lateinit var activityPromoBinding: ActivityPromoBinding
+    private lateinit var activityPromoBinding: ActivityPromoBinding
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setTheme(R.style.AppTheme)
-    super.onCreate(savedInstanceState)
-    activityPromoBinding = ActivityPromoBinding.inflate(layoutInflater)
-    setContentView(activityPromoBinding.root)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
+        super.onCreate(savedInstanceState)
+        activityPromoBinding = ActivityPromoBinding.inflate(layoutInflater)
+        FirebaseAnalytics.getInstance(this)
+        setContentView(activityPromoBinding.root)
+        handleIntent(intent)
+        handleFirebaseDynamicLinks(intent)
+    }
 
-  }
+    private fun handleIntent(intent: Intent) {
+        val appLinkAction: String? = intent.action
+        val applinkData: Uri? = intent.data
+        showDeepLinkOffer(appLinkAction, applinkData)
+
+    }
+
+    private fun showDeepLinkOffer(appLinkAction: String?, applinkData: Uri?) {
+        if (Intent.ACTION_VIEW == appLinkAction && applinkData != null) {
+            val promotionCode = applinkData.getQueryParameter("code")
+            if (promotionCode.isNullOrBlank().not()) {
+                activityPromoBinding.discountGroup.visibility = View.VISIBLE
+                activityPromoBinding.tvPromoCode.text = promotionCode
+                activityPromoBinding.btnClaimOffer.setOnClickListener {
+                    activityPromoBinding.tvOfferClaimed.visibility = View.VISIBLE
+                }
+            } else {
+                activityPromoBinding.discountGroup.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun handleFirebaseDynamicLinks(intent: Intent) {
+        Firebase.dynamicLinks
+            .getDynamicLink(intent)
+            .addOnSuccessListener { dynamicLinkData ->
+                if (dynamicLinkData != null) {
+                    showDynamicLinkOffer(dynamicLinkData.link)
+                }
+            }
+            .addOnFailureListener(this) { e ->
+                Log.d("DynamicLinkError", e.localizedMessage!!)
+            }
+    }
+
+    private fun showDynamicLinkOffer(uri: Uri?) {
+        val promotionCode = uri?.getQueryParameter("code")
+        if (promotionCode.isNullOrBlank().not()) {
+            activityPromoBinding.discountGroup.visibility = View.VISIBLE
+            activityPromoBinding.tvPromoCode.text = promotionCode
+            activityPromoBinding.btnClaimOffer.setOnClickListener {
+                activityPromoBinding.tvOfferClaimed.visibility = View.VISIBLE
+            }
+        } else {
+            activityPromoBinding.discountGroup.visibility = View.GONE
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { newIntent ->
+            handleIntent(newIntent)
+        }
+    }
+
 }
